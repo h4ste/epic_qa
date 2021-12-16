@@ -123,11 +123,11 @@ def extract_to_dir(out_dir, submissions):
             tqdm.write(f'Saved {sid} to {out_file}')
 
 
-def main(subreddit: str, query: str, out_dir: str):
+def main(subreddit: str, query: str, out_dir: str, client_id: str, client_secret: str):
     reddit = praw.Reddit(
-        client_id='O7HBFkqXVGW-FA',
-        client_secret='b39T3bUPg85DQgqAxV7nKrRMk8EOpw',
-        user_agent='idfk'
+        client_id=client_id,
+        client_secret=client_secret,
+        user_agent='python/epicqa'
     )
     subreddit = reddit.subreddit(subreddit)
     submissions = subreddit.search(query, syntax='lucene', sort='top', limit=None)
@@ -142,7 +142,15 @@ if __name__ == '__main__':
                         help='lucene query parameters, e.g., flair:COVID-19')
     parser.add_argument('--output-dir', required=True, type=pathlib.Path,
                         help='output directory')
+
+    parser.add_argument('--praw-id', required=True, type=str,
+                        help='client ID used for Reddit.com\'s PRAW API')
+    parser.add_argument('--praw-secret', required=True, type=str,
+                        help='client secret used to authenticate with Reddit.com\'s PRAW API')
+
     args = parser.parse_args()
     main(subreddit=args.subreddit,
          query=args.query,
-         out_dir=args.output_dir)
+         out_dir=args.output_dir,
+         client_id=args.praw_id,
+         client_secret=args.praw_secret)
